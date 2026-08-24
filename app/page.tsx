@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import SignupForm from "./components/SignupForm";
 
 export default function Home() {
   const [entered, setEntered] = useState(false);
@@ -26,7 +27,7 @@ export default function Home() {
         <nav className="nav">
           <a className="wordmark" href="#top">TLGP</a>
           <div className={menuOpen ? "nav-links open" : "nav-links"}>
-            <a href="#world">The World</a><a href="#book">Book One</a><a href="#creator">Creator</a>
+            <a href="#world">The World</a><a href="#book">Book One</a><a href="#join">Join the List</a><a href="#creator">Creator</a>
           </div>
           <button className="menu" onClick={() => setMenuOpen(!menuOpen)} aria-label="Open menu">Menu</button>
         </nav>
@@ -50,6 +51,13 @@ export default function Home() {
       <section className="book" id="book">
         <div><p className="section-label">Book One</p><h2><em>Osiris Rising</em></h2><p>Before Egypt can face the end of the world, it must survive itself. A queen fights for her throne. An aging general is summoned to save Memphis. Beyond Egypt, a displaced boy named Proteus watches the old world vanish.</p><a className="gold-link dark" href="mailto:hello@thelastgreatpharaoh.com?subject=Osiris%20Rising">Get release news <span>↗</span></a></div>
         <aside><span>01</span><p>THE BEGINNING<br />OF THE END</p></aside>
+      </section>
+
+      <section className="join" id="join">
+        <p className="section-label">Be first to know</p>
+        <h2>Be First to<br /><em>Enter the World</em></h2>
+        <p className="join-copy">Join the reader list for the release of Osiris Rising, early chapters, exclusive artwork, historical notes, and behind-the-scenes updates.</p>
+        <SignupForm idPrefix="home" />
       </section>
 
       <section className="creator" id="creator"><p className="section-label">The creator</p><h2>B. C. Arsenios</h2><p>Building a historically grounded world of power, faith, survival, and the people who lived through civilization’s first great collapse.</p></section>
