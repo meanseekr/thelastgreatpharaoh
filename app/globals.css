@@ -54,10 +54,6 @@
 .legal-page p,.legal-page li{font:16px/1.75 'Libre Baskerville',serif;color:#2c2318;margin:0 0 16px}
 .legal-page ul{padding-left:22px;margin:0 0 16px}
 .legal-page a{color:var(--gold)}
-.legal-page .flag{background:#f8e4c8;border-left:3px solid var(--gold);padding:10px 14px;font:13px/1.6 'DM Sans';color:#5a3f19;margin:0 0 16px;border-radius:0 2px 2px 0}
-.legal-page .flag b{color:var(--rust)}
-.legal-page .open-questions{background:#16120f;color:#eadfc9;padding:28px 26px;border-radius:4px;margin:48px 0}
-.legal-page .open-questions h2{color:#f1d7a4;margin-top:0}
-.legal-page .open-questions li{color:#d8cbae;font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.7}
+.legal-page .postal-address{font-style:normal;line-height:1.5;padding-left:2px;border-left:3px solid var(--gold);padding:2px 0 2px 14px}
 .legal-page .back-link{margin-top:8px;display:inline-block}
 @media(max-width:700px){.legal-page{padding:76px 22px 100px}}

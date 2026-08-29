@@ -11,29 +11,25 @@ export default function PrivacyPolicyPage() {
     <main className="legal-page">
       <p className="eyebrow">The Last Great Pharaoh</p>
       <h1>Privacy Policy</h1>
-      <p className="updated">Draft prepared August 2026 — not yet reviewed or approved</p>
+      <p className="updated">Last updated August 2026</p>
 
       <div className="draft-notice">
-        <strong>Draft status:</strong> This policy was drafted to accurately describe the website&apos;s
-        current technical setup. It is <strong>not legal advice</strong>, and it has not yet been reviewed
-        by B.&nbsp;C.&nbsp;Arsenios or by an attorney. Several details below are explicitly flagged as
-        needing author confirmation before this page should be treated as final. Given that this site
-        collects email addresses, we recommend a brief review by counsel familiar with applicable law
-        (e.g. GDPR, CCPA, CAN-SPAM) before publishing, especially once advertising trackers are added.
+        <strong>Please note:</strong> This policy describes the website&apos;s current technical setup
+        in plain language. It is <strong>not legal advice</strong>. If advertising or cross-site
+        tracking tools are added in the future, we recommend a review by counsel familiar with
+        applicable law (e.g. GDPR, CCPA, CAN-SPAM) before those changes go live.
       </div>
 
       <h2>Who we are</h2>
       <p>
         This Privacy Policy describes how <strong>The Last Great Pharaoh</strong> website
-        (thelastgreatpharaoh.com), created by author B.&nbsp;C.&nbsp;Arsenios, collects and uses
-        information from visitors and reader-list subscribers.
+        (thelastgreatpharaoh.com) collects and uses information from visitors and reader-list
+        subscribers.
       </p>
-      <div className="flag">
-        <b>Author confirmation needed:</b> is there a registered business entity (e.g. an LLC or
-        publishing imprint) that should be named here as the data controller, or should this policy
-        refer only to B.&nbsp;C.&nbsp;Arsenios as an individual / pen name? We have not been given a
-        legal entity name and have not invented one.
-      </div>
+      <p>
+        The Last Great Pharaoh is operated by B.&nbsp;C.&nbsp;Arsenios, an independent author based in
+        California.
+      </p>
 
       <h2>Information we collect</h2>
       <p>We collect information in two ways:</p>
@@ -67,23 +63,27 @@ export default function PrivacyPolicyPage() {
         email includes an unsubscribe link, and you can opt out at any time — doing so removes you from
         future mailings.
       </p>
-      <div className="flag">
-        <b>Author confirmation needed:</b> U.S. CAN-SPAM rules require every marketing email to include a
-        valid postal address. Please provide an address (a P.O. box is acceptable) to add to the Kit
-        email template footer; we have not invented one.
-      </div>
+      <p>
+        In keeping with U.S. CAN-SPAM requirements, our marketing emails include the following postal
+        address:
+      </p>
+      <p className="postal-address">
+        B.&nbsp;C.&nbsp;Arsenios / The Last Great Pharaoh<br />
+        c/o Mofongos<br />
+        5757 Lankershim Blvd<br />
+        North Hollywood, CA 91601
+      </p>
 
       <h2>Data retention</h2>
       <p>
-        We keep your email address and subscription information for as long as you remain subscribed to
-        the reader list, so we can continue sending the updates you signed up for.
+        We keep your subscriber information for as long as you remain subscribed to the reader list, so
+        we can continue sending the updates you signed up for.
       </p>
-      <div className="flag">
-        <b>Author confirmation needed:</b> how long should subscriber data be kept after someone
-        unsubscribes or asks to be removed — deleted immediately, kept for a defined period, or retained
-        indefinitely in an unsubscribed state? We have not been given a retention period and have not
-        assumed one.
-      </div>
+      <p>
+        After you unsubscribe, we retain only the minimum suppression record necessary to honor your
+        opt-out and to meet our legal obligations. Any other information is deleted upon a verified
+        deletion request, unless retention is legally required.
+      </p>
 
       <h2>Third-party service providers</h2>
       <p>We use a small number of third-party services to run this site. Each processes data under its own privacy policy:</p>
@@ -131,15 +131,10 @@ export default function PrivacyPolicyPage() {
       <h2>Your choices and rights</h2>
       <p>
         You can unsubscribe from emails at any time using the link in any message we send. You can also
-        contact us to ask what information we hold about you or to request that it be deleted.
+        contact us to ask what information we hold about you or to request that it be deleted. Depending
+        on where you live, laws such as the EU/UK GDPR or the California CCPA/CPRA may give you further
+        rights; contact us using the email address below and we will respond as those laws require.
       </p>
-      <div className="flag">
-        <b>Author confirmation needed:</b> depending on where readers are located, laws such as the EU/UK
-        GDPR or the California CCPA/CPRA may grant additional rights (e.g. data portability, a formal
-        right to erasure, or an opt-out of &ldquo;sale/sharing&rdquo; once ad trackers are added). This
-        draft describes the practical unsubscribe/deletion process available today; a legal reviewer
-        should confirm whether more formal rights language is required for this audience.
-      </div>
 
       <h2>Changes to this policy</h2>
       <p>
@@ -153,16 +148,6 @@ export default function PrivacyPolicyPage() {
         Questions about this policy or your information can be sent to{" "}
         <a href="mailto:hello@thelastgreatpharaoh.com">hello@thelastgreatpharaoh.com</a>.
       </p>
-
-      <div className="open-questions">
-        <h2>Open questions for B. C. Arsenios</h2>
-        <ul>
-          <li>Should this policy name a formal legal/business entity, or refer only to the author?</li>
-          <li>What postal address should appear in marketing emails (CAN-SPAM requirement)?</li>
-          <li>What should the subscriber data retention period be after someone unsubscribes?</li>
-          <li>Should a lawyer review this before it&apos;s treated as final, particularly for GDPR/CCPA-style rights language?</li>
-        </ul>
-      </div>
 
       <Link className="gold-link dark back-link" href="/">← Back to the world</Link>
     </main>
