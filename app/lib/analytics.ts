@@ -33,7 +33,6 @@ export function trackEvent(name: AnalyticsEvent, detail?: AnalyticsDetail): void
   }
 
   if (process.env.NODE_ENV !== "production") {
-    // eslint-disable-next-line no-console
     console.debug(`[analytics] ${name}`, detail);
   }
 }

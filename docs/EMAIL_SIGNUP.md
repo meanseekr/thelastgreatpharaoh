@@ -18,8 +18,8 @@ How the prelaunch reader-list signup works, and where its settings live.
    - Silently accepts (without contacting Kit) anything that looks automated: the honeypot field filled in, or a submission faster than 1.2 seconds after page load.
    - Validates the email format.
    - Calls Kit's API twice: first to upsert the subscriber (`POST /v4/subscribers`), then to attach them to the "Osiris Rising Prelaunch" form (`POST /v4/forms/9836625/subscribers`), passing the page + UTM parameters as the `referrer`.
-   - Kit's response tells us whether this subscriber was newly added to the form (201) or was already on it (200) — that's how the UI knows to show "You're in" vs. "You're already on the list."
-4. The form shows a loading state while waiting, then either a success/duplicate message or an error message inline (no page reload, no separate "thank you" page — it replaces the form in place).
+   - Kit's response tells us whether this subscriber was newly added to the form (201) or was already on it (200) — that's how the UI knows which confirmation message to show.
+4. The form shows a loading state while waiting. On success (new or already-subscribed), the browser is redirected to `/join/success?status=new` or `/join/success?status=existing` — no email address or other personal data is placed in that URL, just the non-identifying result. On failure, an error message replaces the form in place (no redirect, no page reload) so the visitor can retry without losing what they typed.
 
 ## Where settings live
 
@@ -30,7 +30,11 @@ How the prelaunch reader-list signup works, and where its settings live.
 ## What's intentionally not here yet (future phases)
 
 - No CAPTCHA/bot-protection service — the honeypot + timing check is the current line of defense. Consider a real service (e.g. Turnstile) if spam becomes a problem.
-- No welcome-email automation configured in Kit yet.
-- No privacy policy page yet — the consent line does not currently link to one.
-- No GA4/Meta Pixel/GTM — the `trackEvent` call is ready to be wired to a real provider once one is installed.
+- No welcome-email automation configured in Kit yet — the code-side integration is done; turning on a Kit automation for the "Osiris Rising Prelaunch" form is a Kit-dashboard task, not a code change.
+- No GA4/Meta Pixel/GTM — the `trackEvent` call is ready to be wired to a real provider once one is installed. (Vercel Web Analytics, added on the `prelaunch-foundation` branch, is a separate, privacy-focused pageview counter and is not what `trackEvent` talks to.)
 - No rate limiting beyond the timing heuristic — Vercel's platform-level abuse protection is the current backstop.
+
+## Privacy policy (added on `prelaunch-foundation`)
+
+- Draft policy lives at `/privacy-policy` (`app/privacy-policy/page.tsx`), linked from the footer and from the signup consent line.
+- It's a draft: several facts it cannot state (a legal entity name, a CAN-SPAM postal address, a subscriber data-retention period) are explicitly flagged inline as needing B. C. Arsenios's confirmation before this should be treated as final. See the "Open questions for B. C. Arsenios" section on the page itself.
