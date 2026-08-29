@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import SignupForm from "../components/SignupForm";
 
 export const metadata: Metadata = {
@@ -23,9 +24,9 @@ export default function JoinPage() {
           historical notes, and behind-the-scenes updates.
         </p>
         <SignupForm idPrefix="joinpage" />
-        <a className="gold-link" href="/">
+        <Link className="gold-link" href="/">
           ← Back to the world
-        </a>
+        </Link>
       </div>
     </main>
   );

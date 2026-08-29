@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { trackEvent } from "../lib/analytics";
 
-type Status = "idle" | "loading" | "success" | "duplicate" | "error";
+type Status = "idle" | "loading" | "error";
 
 const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"] as const;
 
 export default function SignupForm({ idPrefix = "join" }: { idPrefix?: string }) {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [hp, setHp] = useState("");
@@ -55,25 +58,16 @@ export default function SignupForm({ idPrefix = "join" }: { idPrefix?: string })
         return;
       }
 
-      const result = data?.status === "existing" ? "duplicate" : "success";
-      setStatus(result);
+      // Kit confirmed the subscription (new or already-on-the-list). Neither
+      // case carries the visitor's email or any other personal data into the
+      // URL — the query string only ever holds the non-identifying result.
+      const result = data?.status === "existing" ? "existing" : "new";
       trackEvent("email_signup", { source: window.location.pathname, result });
+      router.push(`/join/success?status=${result}`);
     } catch {
       setStatus("error");
       setErrorMessage("Something went wrong. Please try again in a moment.");
     }
-  }
-
-  if (status === "success" || status === "duplicate") {
-    return (
-      <div className="signup-form signup-done" role="status" aria-live="polite">
-        <p className="signup-confirm">
-          {status === "success"
-            ? "You're in. Watch your inbox for the first update."
-            : "You're already on the list — thank you!"}
-        </p>
-      </div>
-    );
   }
 
   return (
@@ -132,6 +126,7 @@ export default function SignupForm({ idPrefix = "join" }: { idPrefix?: string })
 
       <p className="consent">
         By joining, you agree to receive email updates about The Last Great Pharaoh. You can unsubscribe anytime.
+        See our <Link href="/privacy-policy">Privacy Policy</Link>.
       </p>
 
       {status === "error" && (
