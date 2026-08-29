@@ -21,16 +21,13 @@ export default function JoinConfirmedPage() {
           You&apos;re In.<br /><em>Welcome to the World</em>
         </h1>
         <p className="deck">
-          Your subscription to the reader list for Osiris Rising is confirmed. Your first update — early
-          chapters, exclusive artwork, and historical notes — is on its way.
+          Your subscription to the reader list for Osiris Rising is confirmed. You&apos;ll receive occasional
+          updates as the project moves toward publication, including release news, selected artwork, and
+          behind-the-scenes historical material.
         </p>
         <p className="deck">
-          You&apos;re stepping into the years the Late Bronze Age came apart — empires that had stood for
-          centuries falling in the span of a single lifetime, and Egypt fighting to be the one civilization
-          that didn&apos;t disappear with them. Watch for a queen holding a threatened throne together, an
-          aging general who can feel the order he&apos;s sworn to protect slipping from his grasp, and
-          Proteus, a boy already displaced by this same collapse, about to be swept into Egypt&apos;s fight
-          for hers.
+          Osiris Rising is the opening of The Last Great Pharaoh, a historical epic set as the Late Bronze
+          Age world begins to collapse and Egypt fights to survive what follows.
         </p>
         <Link className="gold-link" href="/">← Back to the world</Link>
       </div>

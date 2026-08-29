@@ -31,12 +31,14 @@ export default async function JoinSuccessPage({
         </h1>
         <p className="deck">
           {alreadySubscribed
-            ? "You're already on the reader list for Osiris Rising. If you haven't confirmed your subscription yet, check your inbox for the confirmation email we sent — click the link inside it to make sure updates actually reach you."
+            ? "You're already on the reader list for Osiris Rising. If you previously confirmed your subscription, no further action is needed. If you haven't, check your inbox for the confirmation email."
             : "We just sent a confirmation email to your inbox. Click the link inside it to join the reader list for Osiris Rising — nothing arrives until you do."}
         </p>
-        <p className="deck">
-          Don&apos;t see it in a minute or two? Check your spam or promotions folder — confirmation emails end up there more often than they should.
-        </p>
+        {!alreadySubscribed && (
+          <p className="deck">
+            Don&apos;t see it in a minute or two? Check your spam or promotions folder — confirmation emails end up there more often than they should.
+          </p>
+        )}
         <Link className="gold-link" href="/">← Back to the world</Link>
       </div>
     </main>
