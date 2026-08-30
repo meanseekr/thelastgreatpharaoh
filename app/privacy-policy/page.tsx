@@ -44,7 +44,7 @@ export default function PrivacyPolicyPage() {
           the page&apos;s URL at that moment (for example, which link or ad brought you to the site), so
           we can tell which pages and campaigns are working. Separately, our hosting and analytics
           providers may collect standard technical data about your visit — see &ldquo;Website
-          analytics&rdquo; below.
+          analytics&rdquo; and &ldquo;Cookies, analytics, and advertising&rdquo; below.
         </li>
       </ul>
       <p>We do not ask for or knowingly collect payment information, government ID numbers, or other sensitive personal data through this site.</p>
@@ -97,6 +97,16 @@ export default function PrivacyPolicyPage() {
           join the list, your email address (and first name, if given) is sent to and stored by Kit. See{" "}
           <a href="https://kit.com/privacy" target="_blank" rel="noopener noreferrer">Kit&apos;s Privacy Policy</a>.
         </li>
+        <li>
+          <strong>Google</strong> — not yet active. We&apos;ve set up a Google Analytics 4 property and a
+          Google Ads account for this site, but no Google tracking code is installed here yet. See
+          &ldquo;Cookies, analytics, and advertising&rdquo; below.
+        </li>
+        <li>
+          <strong>Meta (Facebook/Instagram)</strong> — not yet active. We&apos;ve set up a Meta ad account
+          and dataset for this site, but no Meta tracking code is installed here yet. See
+          &ldquo;Cookies, analytics, and advertising&rdquo; below.
+        </li>
       </ul>
 
       <h2>Website analytics</h2>
@@ -104,21 +114,58 @@ export default function PrivacyPolicyPage() {
         We use Vercel Web Analytics to understand overall traffic to the site — for example, how many
         people visit and which pages they view. It is designed not to use cookies and not to track you
         individually across websites; it reports aggregated counts rather than an individual visitor
-        profile. See{" "}
+        profile. It runs on every visit and is not affected by the cookie choices described below. See{" "}
         <a href="https://vercel.com/docs/analytics/privacy-policy" target="_blank" rel="noopener noreferrer">
           Vercel&apos;s Web Analytics privacy documentation
         </a>{" "}
         for detail on exactly what it collects.
       </p>
 
-      <h2>Future analytics and advertising technologies</h2>
+      <h2>Cookies, analytics, and advertising</h2>
       <p>
-        We may in the future add additional analytics or advertising tools not in use today — for
-        example, Google Analytics, Google Tag Manager, or the Meta (Facebook/Instagram) Pixel, to help us
-        understand how readers find the site and to measure the results of advertising campaigns. Tools
-        like these typically use cookies or similar technology and may share limited data with the
-        provider (e.g. Google or Meta). If and when we add any of them, we will update this policy first
-        to describe what&apos;s added and what it collects.
+        Beyond Vercel Web Analytics above, this site uses a small number of cookies, grouped into three
+        categories. You choose which categories beyond &ldquo;Essential&rdquo; are active using the
+        cookie banner shown on your first visit, or at any time afterward using the{" "}
+        <strong>Privacy Settings</strong> button available on every page. That choice is itself stored in
+        a first-party cookie (<strong>tlgp_consent</strong>) holding only your yes/no choices and the date
+        you made them — no other personal information.
+      </p>
+      <ul>
+        <li>
+          <strong>Essential.</strong> Required for the site to function, including remembering the choice
+          you make here. Always on — there is no opt-out, because the site can&apos;t work without it.
+        </li>
+        <li>
+          <strong>Analytics — off by default.</strong> Governs <strong>Google Analytics&nbsp;4
+          (GA4)</strong>. We have created a GA4 property for this site, but its tracking code is{" "}
+          <strong>not yet installed</strong>. Once installed, it will only run for visitors who choose
+          &ldquo;Accept all&rdquo; or turn Analytics on in Privacy Settings, and it would collect data
+          such as pages viewed, approximate location and device/browser information, and referring site,
+          processed by Google. See{" "}
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
+            Google&apos;s Privacy Policy
+          </a>.
+        </li>
+        <li>
+          <strong>Advertising — off by default.</strong> Governs <strong>Google Ads</strong> conversion
+          tracking and the <strong>Meta (Facebook/Instagram) Pixel and Conversions API</strong>. We have
+          created a Google Ads account and a Meta ad account and dataset for this site, but none of this
+          tracking code is <strong>installed yet</strong>. Once installed, it will only run for visitors
+          who choose &ldquo;Accept all&rdquo; or turn Advertising on in Privacy Settings, and it would
+          share data such as which page led to a signup and general device/browser information with
+          Google and Meta, so we can measure the results of future advertising campaigns. See{" "}
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
+            Google&apos;s Privacy Policy
+          </a>{" "}
+          and{" "}
+          <a href="https://www.facebook.com/privacy/policy/" target="_blank" rel="noopener noreferrer">
+            Meta&apos;s Privacy Policy
+          </a>.
+        </li>
+      </ul>
+      <p>
+        We&apos;ll update this section, and the categories above, if what we actually install ever
+        differs from what&apos;s described here.
       </p>
 
       <h2>Children&apos;s privacy</h2>
@@ -129,6 +176,11 @@ export default function PrivacyPolicyPage() {
       </p>
 
       <h2>Your choices and rights</h2>
+      <p>
+        You can choose whether analytics and advertising cookies are used on this site at any time, using
+        the <strong>Privacy Settings</strong> button available on every page — see &ldquo;Cookies,
+        analytics, and advertising&rdquo; above for what each category means.
+      </p>
       <p>
         You can unsubscribe from emails at any time using the link in any message we send. You can also
         contact us to ask what information we hold about you or to request that it be deleted. Depending
