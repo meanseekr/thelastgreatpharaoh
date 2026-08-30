@@ -12,8 +12,17 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body>
-        {children}
+        {/* Rendered before {children} so its mount effect (which lazily
+            creates the window.gtag / window.fbq stubs — see
+            app/components/ConsentManager.tsx) runs before any page-level
+            tracker that depends on those globals, such as
+            app/join/confirmed/ConfirmedSignupTracker.tsx. React fires
+            passive effects in tree/document order, so this ordering is
+            load-bearing: with ConsentManager after {children}, a page's own
+            effect could run first and find window.gtag/window.fbq still
+            undefined. See TLGP_DECISIONS_LOG for the bug this fixed. */}
         <ConsentManager />
+        {children}
         <Analytics />
       </body>
     </html>
