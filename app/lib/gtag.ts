@@ -20,22 +20,24 @@
  * in Phase 1 / this Phase-3 setup — see TLGP_DECISIONS_LOG. No campaign
  * was created and no billing was entered to obtain either.
  *
- * Google Ads destination registration: gtag.js only routes an
- * `event`/`send_to` call to a destination it has actually been told
- * about — via the script's own `id=` query param, or a `config` call for
- * that ID. This file's script tag only ever names the GA4 ID, and (by
- * design, see syncGoogleConsent below) never calls `config` for the Ads
- * ID either from a site-wide/every-page path — so, found in live testing,
- * `fireGoogleAdsConversion()`'s event never actually reached Google: it
- * had nowhere to route to. The fix is `ensureAdsDestinationConfigured()`
- * below: exactly one `gtag('config', GOOGLE_ADS_CONVERSION_ID,
- * {send_page_view: false})` call, made only when Advertising consent is
- * granted, queued immediately after the bootstrap `gtag('js', ...)` call
- * (or as soon as Advertising consent arrives, if that's later than first
- * load) and always before `fireGoogleAdsConversion()` can run. This
- * registers the destination — the minimum gtag.js needs to route the one
- * conversion event this project counts — without configuring a site-wide
- * page_view for it, which is what would turn it into a remarketing tag.
+ * Google Ads destination registration — second attempt: gtag.js only
+ * routes an `event`/`send_to` call to a destination it has actually been
+ * told about — via the script's own `id=` query param, or a `config` call
+ * for that ID. The first attempt at this fix (registering the Ads ID via
+ * a `config` call queued right after the bootstrap `js` call) was verified
+ * on the real, live gtag.js — correct command order, correct consent
+ * gating — and still never produced a single outbound request, in this
+ * session's own testing tool *and* in a clean, extension-free Incognito
+ * Chrome window. So this file now bootstraps the script itself with
+ * whichever ID actually needs to route events on this page load, instead
+ * of relying on a later `config` call for a second destination: when
+ * Advertising consent is present at first load, the script's own `id=` is
+ * `AW-18245662140` (Google Ads), and GA4 is added afterward with a plain
+ * `config` call if Analytics is also granted. When only Analytics is
+ * granted, the script bootstraps with the GA4 ID exactly as before, and
+ * Google Ads is never touched. Only one `<script>` tag is ever added
+ * (see loadScript below) — whichever ID it's loaded with is the one
+ * that's actually registered as a destination for this page load.
  */
 
 export const GA4_MEASUREMENT_ID = "G-XWHSC4BH6S";
@@ -74,14 +76,19 @@ function consentPayload(analytics: boolean, advertising: boolean) {
 }
 
 /**
- * Registers AW-18245662140 as a destination gtag.js actually knows about,
- * exactly once per page load, and only under Advertising consent. Without
- * this, `gtag('event', 'conversion', {send_to: 'AW-.../...'})` has no
- * registered destination to route to and gtag.js silently drops it — see
- * the file-level comment above. `send_page_view: false` registers the
- * destination without also firing the site-wide remarketing pageview tag
- * `config` would otherwise trigger, preserving the "no remarketing tag,
- * just the one conversion" scope this project is limited to.
+ * Best-effort registration for the case Google's own `config` mechanism
+ * was meant to cover: Advertising consent arriving *after* the script has
+ * already been bootstrapped with the GA4 ID (e.g. the visitor granted
+ * Analytics only, then later upgraded via Privacy Settings, without a page
+ * reload). There's no way to change which ID a `<script>` tag was loaded
+ * with after the fact, so this is still a `config` call for the Ads ID —
+ * the same mechanism that was verified not to produce a live conversion
+ * request when tested standalone. It's kept here because it's harmless
+ * (a single extra `config` call, gated and deduped) and it's the only
+ * option left for this specific after-the-fact scenario, but it carries
+ * the same caveat: it may not actually route a conversion event. The
+ * page-load-time fix below (bootstrapping with the Ads ID directly) is
+ * the one that's been verified to work.
  */
 function ensureAdsDestinationConfigured(advertising: boolean): void {
   if (!advertising || adsDestinationConfigured || typeof window === "undefined") return;
@@ -89,11 +96,12 @@ function ensureAdsDestinationConfigured(advertising: boolean): void {
   adsDestinationConfigured = true;
 }
 
-function loadScript(): void {
+/** Adds the gtag.js `<script>` tag exactly once, bootstrapped with `id`. */
+function loadScript(id: string): void {
   if (scriptLoaded || scriptLoading || typeof document === "undefined") return;
   scriptLoading = true;
   const script = document.createElement("script");
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
   script.async = true;
   script.onload = () => {
     scriptLoaded = true;
@@ -104,14 +112,15 @@ function loadScript(): void {
 /**
  * Call whenever the visitor's stored consent choice is known or changes
  * (see ConsentManager). Loads gtag.js the first time either analytics or
- * advertising is granted — never before — sets Consent Mode v2 signals to
- * match, and configures GA4 only when analytics is granted. Google Ads
- * gets exactly one `config` call, only under Advertising consent, with
- * `send_page_view: false` — enough for gtag.js to route the one
- * conversion event this project counts (see
- * ensureAdsDestinationConfigured above), but not a site-wide page_view /
- * remarketing tag, which stays deliberately out of scope — see
- * fireGoogleAdsConversion below.
+ * advertising is granted — never before.
+ *
+ * Which ID the script is bootstrapped with depends on what's granted at
+ * that first load: Advertising present → bootstrap with the Google Ads ID
+ * (this is what actually registers it as a routable destination — see the
+ * file-level comment), then also `config` GA4 if Analytics is granted too.
+ * Advertising absent, Analytics present → bootstrap with the GA4 ID only,
+ * exactly as before; Google Ads is never loaded or configured. Only one
+ * `<script>` tag is ever added, by loadScript's own load/loading guard.
  */
 export function syncGoogleConsent(analytics: boolean, advertising: boolean): void {
   if (typeof window === "undefined") return;
@@ -134,20 +143,21 @@ export function syncGoogleConsent(analytics: boolean, advertising: boolean): voi
   if (firstLoad) {
     window.gtag!("consent", "default", consentPayload(analytics, advertising));
     window.gtag!("js", new Date());
-    // Register the Google Ads destination immediately after the bootstrap
-    // 'js' call and before the script itself loads — i.e. queued in
-    // dataLayer in the correct order for gtag.js to process on load —
-    // and before loadScript() below, so it's never possible for
-    // fireGoogleAdsConversion() to run first. See the file-level comment
-    // and ensureAdsDestinationConfigured() above.
-    ensureAdsDestinationConfigured(advertising);
-    loadScript();
+    if (advertising) {
+      // Bootstrap with the Ads ID itself — this is the registration.
+      // (GA4, if also granted, is added below via the shared `config`
+      // call at the bottom of this function.)
+      adsDestinationConfigured = true;
+      loadScript(GOOGLE_ADS_CONVERSION_ID);
+    } else {
+      // Analytics-only: unchanged from before this fix.
+      loadScript(GA4_MEASUREMENT_ID);
+    }
   } else {
     window.gtag!("consent", "update", consentPayload(analytics, advertising));
-    // Advertising consent may have been granted after first load (e.g. the
-    // visitor granted Analytics only, then later upgraded via Privacy
-    // Settings) — register the destination now if so. No-ops if already
-    // registered or still not granted.
+    // Advertising consent arriving after the script already bootstrapped
+    // with the GA4 ID — see ensureAdsDestinationConfigured's own comment
+    // for why this is a best-effort fallback, not a verified fix.
     ensureAdsDestinationConfigured(advertising);
   }
 
