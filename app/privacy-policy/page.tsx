@@ -98,14 +98,14 @@ export default function PrivacyPolicyPage() {
           <a href="https://kit.com/privacy" target="_blank" rel="noopener noreferrer">Kit&apos;s Privacy Policy</a>.
         </li>
         <li>
-          <strong>Google</strong> — not yet active. We&apos;ve set up a Google Analytics 4 property and a
-          Google Ads account for this site, but no Google tracking code is installed here yet. See
-          &ldquo;Cookies, analytics, and advertising&rdquo; below.
+          <strong>Google</strong> — Google Analytics 4 and Google Ads conversion-tracking code is
+          installed on this site, but blocked from running unless you choose to allow the Analytics
+          and/or Advertising categories described below.
         </li>
         <li>
-          <strong>Meta (Facebook/Instagram)</strong> — not yet active. We&apos;ve set up a Meta ad account
-          and dataset for this site, but no Meta tracking code is installed here yet. See
-          &ldquo;Cookies, analytics, and advertising&rdquo; below.
+          <strong>Meta (Facebook/Instagram)</strong> — Meta Pixel code is installed on this site, but
+          blocked from running unless you choose to allow the Advertising category described below. We
+          do not use the Meta Conversions API.
         </li>
       </ul>
 
@@ -137,22 +137,22 @@ export default function PrivacyPolicyPage() {
         </li>
         <li>
           <strong>Analytics — off by default.</strong> Governs <strong>Google Analytics&nbsp;4
-          (GA4)</strong>. We have created a GA4 property for this site, but its tracking code is{" "}
-          <strong>not yet installed</strong>. Once installed, it will only run for visitors who choose
-          &ldquo;Accept all&rdquo; or turn Analytics on in Privacy Settings, and it would collect data
-          such as pages viewed, approximate location and device/browser information, and referring site,
-          processed by Google. See{" "}
+          (GA4)</strong>. Its code is present on this site but is <strong>blocked from loading or sending
+          any data</strong> unless you choose &ldquo;Accept all&rdquo; or turn Analytics on in Privacy
+          Settings. Once allowed, it collects data such as pages viewed, approximate location and
+          device/browser information, and referring site, processed by Google. See{" "}
           <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
             Google&apos;s Privacy Policy
           </a>.
         </li>
         <li>
           <strong>Advertising — off by default.</strong> Governs <strong>Google Ads</strong> conversion
-          tracking and the <strong>Meta (Facebook/Instagram) Pixel and Conversions API</strong>. We have
-          created a Google Ads account and a Meta ad account and dataset for this site, but none of this
-          tracking code is <strong>installed yet</strong>. Once installed, it will only run for visitors
-          who choose &ldquo;Accept all&rdquo; or turn Advertising on in Privacy Settings, and it would
-          share data such as which page led to a signup and general device/browser information with
+          tracking and the <strong>Meta (Facebook/Instagram) Pixel</strong>. Their code is present on this
+          site but is <strong>blocked from loading or sending any data</strong> unless you choose
+          &ldquo;Accept all&rdquo; or turn Advertising on in Privacy Settings. The only outcome we measure
+          this way is whether a visit led to a <strong>confirmed reader-list signup</strong> — we do not
+          use these tools for retargeting or audience-building today. Once allowed, completing that
+          signup shares data such as which page led to it and general device/browser information with
           Google and Meta, so we can measure the results of future advertising campaigns. See{" "}
           <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
             Google&apos;s Privacy Policy

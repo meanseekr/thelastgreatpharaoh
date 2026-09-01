@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import ConfirmedSignupTracker from "./ConfirmedSignupTracker";
 
 export const metadata: Metadata = {
   title: "You're In | The Last Great Pharaoh",
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
 export default function JoinConfirmedPage() {
   return (
     <main className="joinpage">
+      <ConfirmedSignupTracker />
       <div className="joinpage-grain" />
       <div className="joinpage-content">
         <p className="eyebrow">The Last Great Pharaoh</p>

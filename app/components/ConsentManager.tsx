@@ -8,6 +8,8 @@ import {
   writeConsent,
   type ConsentChoice,
 } from "../lib/consent";
+import { syncGoogleConsent } from "../lib/gtag";
+import { syncMetaConsent } from "../lib/metaPixel";
 
 // Returns false during server rendering and on the client's very first
 // render (before hydration), true afterwards — the same hydration-safe way
@@ -36,8 +38,13 @@ function useJsReady() {
  *   saved independently of one another.
  *
  * Analytics and advertising both default to off — see app/lib/consent.ts.
- * Nothing on this site currently reads the stored choice; no analytics or
- * advertising code is installed yet.
+ * GA4 and Google Ads (app/lib/gtag.ts) and the Meta Pixel
+ * (app/lib/metaPixel.ts) both read the stored choice via the effect below,
+ * which runs on mount (so a returning visitor's earlier choice is applied
+ * immediately) and again every time the choice changes (accept/reject/
+ * customize, or a later change via Privacy Settings) — including
+ * withdrawal, which is sent on as a live consent update rather than
+ * requiring a page reload.
  *
  * Sits at a lower z-index than the homepage's intro overlay (GatewayShell,
  * z-index 60) so it stays hidden behind that full-screen intro until it's
@@ -61,6 +68,18 @@ export default function ConsentManager() {
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [modalOpen]);
+
+  // Keeps GA4 / Google Ads / Meta Pixel in sync with the stored choice —
+  // on first read (mount) and on every subsequent change. Each sync
+  // function is itself a no-op until its relevant consent category is
+  // granted, so this is safe to call unconditionally.
+  useEffect(() => {
+    if (!jsReady) return;
+    const analytics = consent?.analytics ?? false;
+    const advertising = consent?.advertising ?? false;
+    syncGoogleConsent(analytics, advertising);
+    syncMetaConsent(advertising);
+  }, [jsReady, consent]);
 
   function closeModal() {
     setModalOpen(false);
@@ -144,10 +163,10 @@ export default function ConsentManager() {
               Privacy Settings
             </h2>
             <p>
-              Choose which cookies this site can use. These choices apply as soon as the corresponding
-              tool is turned on; today, nothing beyond essential site function and Vercel&apos;s
-              cookieless traffic counter (unaffected by this choice — see our{" "}
-              <a href="/privacy-policy">Privacy Policy</a>) is active.
+              Choose which cookies this site can use. These choices take effect immediately — Vercel&apos;s
+              cookieless traffic counter (see our <a href="/privacy-policy">Privacy Policy</a>) always
+              runs regardless of your choice here; every other tool below stays off unless and until you
+              turn it on.
             </p>
 
             <div className="consent-category">
@@ -169,8 +188,8 @@ export default function ConsentManager() {
                 />
               </div>
               <p>
-                Lets us run Google Analytics 4 to understand which pages readers visit, in aggregate. Not
-                yet installed on this site.
+                Lets us run Google Analytics&nbsp;4 to understand which pages readers visit, in aggregate.
+                Blocked from running unless this is on.
               </p>
             </div>
 
@@ -186,7 +205,8 @@ export default function ConsentManager() {
               </div>
               <p>
                 Lets us run Google Ads conversion tracking and the Meta (Facebook/Instagram) Pixel to
-                measure future advertising campaigns. Not yet installed on this site.
+                measure whether a reader-list signup followed one of our ads. Blocked from running unless
+                this is on.
               </p>
             </div>
 
