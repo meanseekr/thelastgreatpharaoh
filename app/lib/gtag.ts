@@ -20,26 +20,22 @@
  * in Phase 1 / this Phase-3 setup — see TLGP_DECISIONS_LOG. No campaign
  * was created and no billing was entered to obtain either.
  *
- * Google Ads destination registration — third attempt: gtag.js only
- * routes an `event`/`send_to` call to a destination it has actually been
- * told about, and per Google's own documented global-site-tag snippet
- * that registration happens via an explicit `config` call — the script's
- * `id=` query param only selects which gtag.js payload to fetch, it does
- * not by itself register anything. The second attempt at this fix
- * (bootstrapping the script itself with the Ads ID and treating that as
- * the registration, skipping `config`) was deployed and tested in a real,
- * clean Incognito Chrome window: the gtag.js request for `id=AW-...`
- * succeeded, but zero `pagead`/conversion requests followed, because no
- * `config` call for that ID was ever actually made — `adsDestinationConfigured`
- * was set to `true` without the call it names. This version restores the
- * explicit `config` call on the first-load path (in addition to bootstrapping
- * the script with the Ads ID, which is harmless and matches Google's own
- * pattern of the script `id=` and the primary `config` call using the same
- * ID), so the sequence is: bootstrap script with the Ads ID → `config` the
- * Ads ID → (if Analytics is also granted) `config` GA4 too. When only
- * Analytics is granted, the script bootstraps with the GA4 ID exactly as
- * before, and Google Ads is never loaded or configured. Only one
- * `<script>` tag is ever added (see loadScript below).
+ * Google Ads destination registration — fourth attempt: the third attempt
+ * (restoring the explicit `config` call for the Ads ID on the first-load
+ * path) was deployed and tested in a genuinely clean, fully-captured
+ * Incognito Chrome session: still zero `pagead`/conversion requests.
+ * Direct runtime inspection (comparing the real page's top-level
+ * `window` against an isolated same-origin iframe running the identical
+ * command sequence, which DID fire real conversion requests) found one
+ * clear difference: `window.google_tag_data.ics.usedDefault` and `.active`
+ * were `false` on the real page but `true` in the iframe — the real
+ * gtag.js runtime never registered our `consent default` command as the
+ * default it used, despite that command being present and first in
+ * `dataLayer`. This version is a pure ordering fix: `consent default`,
+ * `js`, and `config` are now all queued synchronously, in that order,
+ * *before* loadScript() appends the `<script>` tag that fetches gtag.js
+ * — previously `config` was queued after loadScript() was called. No
+ * other logic changed.
  */
 
 export const GA4_MEASUREMENT_ID = "G-XWHSC4BH6S";
@@ -144,13 +140,13 @@ export function syncGoogleConsent(analytics: boolean, advertising: boolean): voi
     window.gtag!("consent", "default", consentPayload(analytics, advertising));
     window.gtag!("js", new Date());
     if (advertising) {
-      // Bootstrap with the Ads ID, then explicitly `config` it — the
-      // script `id=` alone does not register the destination (see the
-      // file-level comment). GA4, if also granted, is added below via
-      // the shared `config` call at the bottom of this function.
-      loadScript(GOOGLE_ADS_CONVERSION_ID);
+      // Timing fix (see file-level comment): `config` is queued here,
+      // before loadScript() appends the <script> tag — not after, as in
+      // the prior attempt. GA4, if also granted, is added below via the
+      // shared `config` call at the bottom of this function.
       window.gtag!("config", GOOGLE_ADS_CONVERSION_ID, { send_page_view: false });
       adsDestinationConfigured = true;
+      loadScript(GOOGLE_ADS_CONVERSION_ID);
     } else {
       // Analytics-only: unchanged from before this fix.
       loadScript(GA4_MEASUREMENT_ID);
