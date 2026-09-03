@@ -93,3 +93,74 @@
   .consent-settings-btn{left:12px;bottom:12px;padding:8px 12px;font-size:8px}
   .consent-modal{padding:34px 22px 26px}
 }
+
+/* --- Homepage intro video (added 2026-09-03) --- */
+
+/* Modern dynamic viewport height, layered on top of the .gateway rule
+   above. Browsers that don't understand `dvh` ignore this whole
+   declaration and keep the `100svh` set there; browsers that do use it
+   here, so the gate tracks the real visible viewport as mobile browser
+   chrome shows and hides instead of leaving a gap or overshooting. */
+.gateway{height:100dvh}
+
+/* Fills the gate behind the entry text. Starts invisible (the entry
+   screen is text-only) and fades in once playback starts. object-fit
+   defaults to cover for desktop and landscape screens — including a
+   phone rotated to landscape, which recomputes this media query on its
+   own — and switches to contain on portrait phones below, so the full
+   16:9 frame stays visible with letterboxing instead of losing the
+   sides. Never rotated or stretched; always full quality within the
+   available box. */
+.intro-video{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  background:#000;
+  opacity:0;
+}
+.phase-playing .intro-video,.phase-ending .intro-video{opacity:1}
+
+@media(orientation:portrait){
+  .intro-video{object-fit:contain}
+}
+
+/* Small, readable-but-unobtrusive Skip control shown over the video
+   itself during playback, distinct from the larger entry-screen Skip
+   Intro button it shares styling with. */
+.discreet-skip{
+  position:absolute;
+  z-index:2;
+  right:max(4vw,20px);
+  bottom:max(4vh,24px);
+  margin-top:0;
+  padding:11px 18px;
+  background:rgba(5,5,4,.4);
+  border:1px solid rgba(226,209,176,.3);
+  border-radius:2px;
+}
+.discreet-skip:hover{color:#f1d7a4;border-color:rgba(226,209,176,.55)}
+
+.intro-error-msg{
+  max-width:360px;
+  margin:0 0 22px;
+  font:14px/1.6 'DM Sans';
+  color:#e2a08a;
+}
+
+/* Natural end of playback fades the whole gate (video included) to
+   reveal the homepage underneath — see GatewayShell's handleEnded.
+   Selecting Skip Intro (button or Escape) bypasses this and reveals the
+   homepage immediately, per spec, so this transition is scoped to
+   .phase-ending only. Gated behind prefers-reduced-motion: no-preference
+   so a visitor who has asked for reduced motion gets an instant cut
+   instead — GatewayShell's handleEnded checks the same preference in JS
+   and skips the fade state entirely rather than relying on a transition
+   that would never visibly run. */
+@media(prefers-reduced-motion:no-preference){
+  .gateway{transition:opacity .8s ease}
+  .intro-video{transition:opacity .6s ease}
+}
+.phase-ending{opacity:0}
