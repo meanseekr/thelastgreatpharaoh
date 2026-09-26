@@ -4,7 +4,7 @@ const SITE_URL = "https://www.thelastgreatpharaoh.com";
 
 // Only the pages meant to be discovered via search are listed here.
 // /join/success and /join/confirmed are transactional pages reached only
-// after a form submission or a confirmation-email click — they aren't
+// after a form submission or an older confirmation-email click — they aren't
 // useful search landing pages, so they're intentionally left out.
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

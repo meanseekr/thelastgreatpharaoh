@@ -283,8 +283,8 @@ export function syncGoogleConsent(analytics: boolean, advertising: boolean): voi
 }
 
 /**
- * Fires the one and only Google Ads conversion this site counts: a
- * confirmed signup, from app/join/confirmed. No-op unless advertising
+ * Fires the one and only Google Ads conversion this site counts: a new
+ * single-opt-in signup, from app/join/success. No-op unless advertising
  * consent is granted at call time.
  */
 export function fireGoogleAdsConversion(advertisingGranted: boolean): void {

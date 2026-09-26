@@ -10,9 +10,10 @@
  *
  * Once advertising consent is granted, the site sends Meta's standard
  * PageView event for each route visit, ViewContent on /join, and Lead on
- * /join/confirmed. The initial form submission and /join/success never
- * count as a Lead. We do not use the Conversions API or enhanced
- * conversions (hashed-PII matching).
+ * /join/success only when Kit reports a genuinely new form subscriber.
+ * Existing subscribers and the legacy /join/confirmed page never count as
+ * a Lead. We do not use the Conversions API or enhanced conversions
+ * (hashed-PII matching).
  */
 
 export const META_PIXEL_ID = "1541395820600997";
@@ -119,14 +120,14 @@ export function fireMetaViewContent(advertisingGranted: boolean): boolean {
 }
 
 /**
- * Fires the site's Meta conversion: a confirmed signup, from
- * app/join/confirmed. Uses Meta's standard 'Lead' event (not a custom
- * event) with a content_name identifying it as the confirmed signup, so
+ * Fires the site's Meta conversion: a new single-opt-in signup, from
+ * app/join/success. Uses Meta's standard 'Lead' event (not a custom event)
+ * with a content_name identifying the reader-list action, so
  * it's recognized by Meta's own conversion tooling without inventing a
  * custom event name. No-op unless advertising consent is granted at call
  * time.
  */
 export function fireMetaLead(advertisingGranted: boolean): void {
   if (typeof window === "undefined" || !advertisingGranted || !window.fbq) return;
-  window.fbq("track", "Lead", { content_name: "Confirmed Signup" });
+  window.fbq("track", "Lead", { content_name: "Reader List Signup" });
 }

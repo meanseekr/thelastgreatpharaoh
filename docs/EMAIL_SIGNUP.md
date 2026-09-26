@@ -18,20 +18,21 @@ How the prelaunch reader-list signup works, and where its settings live.
    - Silently accepts (without contacting Kit) anything that looks automated: the honeypot field filled in, or a submission faster than 1.2 seconds after page load.
    - Validates the email format.
    - Calls Kit's API twice: first to upsert the subscriber (`POST /v4/subscribers`), then to attach them to the "Osiris Rising Prelaunch" form (`POST /v4/forms/9836625/subscribers`), passing the page + UTM parameters as the `referrer`.
-   - Kit's response tells us whether this subscriber was newly added to the form (201) or was already on it (200) — that's how the UI knows which confirmation message to show.
-4. The form shows a loading state while waiting. On success (new or already-subscribed), the browser is redirected to `/join/success?status=new` or `/join/success?status=existing` — no email address or other personal data is placed in that URL, just the non-identifying result. On failure, an error message replaces the form in place (no redirect, no page reload) so the visitor can retry without losing what they typed.
+   - Kit's response tells us whether this subscriber was newly added to the form (201) or was already on it (200). With auto-confirm enabled on the Kit form, a new subscriber is immediately eligible for the welcome sequence. A real new form membership also receives a random conversion ID; silently discarded bot submissions do not.
+4. The form shows a loading state while waiting. On success, the browser is redirected to `/join/success?status=new` or `/join/success?status=existing` — no email address or other personal data is placed in that URL. A random ID returned only for a real new form membership is held in the current page's JavaScript memory and consumed when the consent-gated Meta `Lead` and Google Ads conversion fire. Direct or repeated success-page visits cannot create conversions. On failure, an error message replaces the form in place so the visitor can retry without losing what they typed.
 
 ## Where settings live
 
 - **Kit API key** — stored as the `KIT_API_KEY` environment variable in the Vercel project (Settings → Environment Variables), set for both Production and Preview. Never committed to the repo.
 - **Kit Form ID** — `9836625` (the "Osiris Rising Prelaunch" form). Not a secret, so it's a plain constant at the top of `app/api/subscribe/route.ts`. If a new form is ever created in Kit, update that one constant.
+- **Kit opt-in** — the form must have auto-confirm enabled (single opt-in) and its confirmation/incentive email disabled. The immediate welcome email belongs in the Kit sequence triggered when a new subscriber joins this form.
 - **Signup copy** (headline, supporting text, button label, consent line) — currently duplicated in three places: the homepage section in `app/page.tsx`, the `/join` page in `app/join/page.tsx`, and the shared consent line in `SignupForm.tsx`. All approved by B. C. Arsenios on 2026-08-24; see the project's `TLGP_DECISIONS_LOG`.
 
 ## What's intentionally not here yet (future phases)
 
 - No CAPTCHA/bot-protection service — the honeypot + timing check is the current line of defense. Consider a real service (e.g. Turnstile) if spam becomes a problem.
-- No welcome-email automation configured in Kit yet — the code-side integration is done; turning on a Kit automation for the "Osiris Rising Prelaunch" form is a Kit-dashboard task, not a code change.
-- No GA4/Meta Pixel/GTM — the `trackEvent` call is ready to be wired to a real provider once one is installed. (Vercel Web Analytics, added on the `prelaunch-foundation` branch, is a separate, privacy-focused pageview counter and is not what `trackEvent` talks to.)
+- The welcome-email copy and timing are managed in Kit, not this repository. The first sequence email should be set to send immediately when a new subscriber joins the "Osiris Rising Prelaunch" form.
+- GA4, Google Ads conversion tracking, Meta Pixel, and Vercel Web Analytics are installed. Google and Meta events remain gated by the visitor's cookie choices.
 - No rate limiting beyond the timing heuristic — Vercel's platform-level abuse protection is the current backstop.
 
 ## Privacy policy (added on `prelaunch-foundation`)

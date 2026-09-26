@@ -151,8 +151,8 @@ export default function PrivacyPolicyPage() {
           site but is <strong>blocked from loading or sending any data</strong> unless you choose
           &ldquo;Accept all&rdquo; or turn Advertising on in Privacy Settings. Once allowed, the Meta Pixel
           records a page-view event as you move through the site and a content-view event when you reach
-          the reader-list signup page. If you complete the double opt-in, Google Ads and Meta receive a
-          confirmed-signup event. These services may also receive information such as the page URL,
+          the reader-list signup page. When Kit accepts a new reader-list signup, Google Ads and Meta
+          receive a signup event. These services may also receive information such as the page URL,
           referring site, and general device/browser information so we can measure campaign results and,
           if activated, create or reach advertising audiences. See{" "}
           <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">

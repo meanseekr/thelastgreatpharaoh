@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { randomUUID } from "node:crypto";
 
 // The Kit ("Osiris Rising Prelaunch") form this site sends readers to.
 // Not a secret — safe to keep as a plain constant. The API key that
@@ -96,8 +97,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 2. Attach the subscriber to the prelaunch form (this is what triggers
-    // any welcome sequence attached to the form, and records UTM referrer).
+    // 2. Attach the subscriber to the prelaunch form. With that form set to
+    // auto-confirm in Kit, this triggers its immediate welcome sequence and
+    // records the page/UTM referrer without requiring a confirmation email.
     const formRes = await fetch(`${KIT_API_BASE}/forms/${KIT_FORM_ID}/subscribers`, {
       method: "POST",
       headers: {
@@ -122,7 +124,16 @@ export async function POST(req: NextRequest) {
     // Kit returns 201 when this subscriber is newly added to this form,
     // 200 when they were already on it — that's our duplicate signal.
     const status = formRes.status === 200 ? "existing" : "new";
-    return NextResponse.json({ status }, { status: 200 });
+    return NextResponse.json(
+      {
+        status,
+        // Non-identifying, one-use handoff for conversion integrity. Quietly
+        // accepted bot submissions above never receive one, and a direct
+        // visit to /join/success cannot manufacture a valid browser handoff.
+        ...(status === "new" ? { conversionId: randomUUID() } : {}),
+      },
+      { status: 200 }
+    );
   } catch (err) {
     console.error("Kit API request failed:", err);
     return NextResponse.json(
