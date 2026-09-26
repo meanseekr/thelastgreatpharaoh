@@ -11,13 +11,13 @@ export default function PrivacyPolicyPage() {
     <main className="legal-page">
       <p className="eyebrow">The Last Great Pharaoh</p>
       <h1>Privacy Policy</h1>
-      <p className="updated">Last updated August 2026</p>
+      <p className="updated">Last updated September 2026</p>
 
       <div className="draft-notice">
         <strong>Please note:</strong> This policy describes the website&apos;s current technical setup
-        in plain language. It is <strong>not legal advice</strong>. If advertising or cross-site
-        tracking tools are added in the future, we recommend a review by counsel familiar with
-        applicable law (e.g. GDPR, CCPA, CAN-SPAM) before those changes go live.
+        in plain language. It is <strong>not legal advice</strong>. Because advertising and cross-site
+        tracking technologies are present, we recommend a review by counsel familiar with applicable
+        law (e.g. GDPR, CCPA, CAN-SPAM) before paid campaigns go live or this setup changes materially.
       </div>
 
       <h2>Who we are</h2>
@@ -149,11 +149,12 @@ export default function PrivacyPolicyPage() {
           <strong>Advertising — off by default.</strong> Governs <strong>Google Ads</strong> conversion
           tracking and the <strong>Meta (Facebook/Instagram) Pixel</strong>. Their code is present on this
           site but is <strong>blocked from loading or sending any data</strong> unless you choose
-          &ldquo;Accept all&rdquo; or turn Advertising on in Privacy Settings. The only outcome we measure
-          this way is whether a visit led to a <strong>confirmed reader-list signup</strong> — we do not
-          use these tools for retargeting or audience-building today. Once allowed, completing that
-          signup shares data such as which page led to it and general device/browser information with
-          Google and Meta, so we can measure the results of future advertising campaigns. See{" "}
+          &ldquo;Accept all&rdquo; or turn Advertising on in Privacy Settings. Once allowed, the Meta Pixel
+          records a page-view event as you move through the site and a content-view event when you reach
+          the reader-list signup page. If you complete the double opt-in, Google Ads and Meta receive a
+          confirmed-signup event. These services may also receive information such as the page URL,
+          referring site, and general device/browser information so we can measure campaign results and,
+          if activated, create or reach advertising audiences. See{" "}
           <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
             Google&apos;s Privacy Policy
           </a>{" "}

@@ -5,6 +5,11 @@ import { getConsentServerSnapshot, getConsentSnapshot, subscribeConsent } from "
 import { fireGoogleAdsConversion } from "../../lib/gtag";
 import { fireMetaLead } from "../../lib/metaPixel";
 
+// A full reload starts a new page load and resets this module. Keeping the
+// flag outside the component also guards the conversion against React
+// Strict Mode's development-only mount/remount cycle.
+let confirmedSignupFiredForPageLoad = false;
+
 /**
  * Fires the site's one and only ad-platform conversion — a confirmed
  * signup — when this page (the real end of the double opt-in flow) is
@@ -36,7 +41,7 @@ export default function ConfirmedSignupTracker() {
 
   useEffect(() => {
     const advertising = consent?.advertising ?? false;
-    if (!advertising || firedRef.current) return;
+    if (!advertising || firedRef.current || confirmedSignupFiredForPageLoad) return;
 
     // Only commit to "fired" once the tracking functions are actually
     // callable — see the component doc comment above. If they're not
@@ -49,6 +54,7 @@ export default function ConfirmedSignupTracker() {
     if (!trackingReady) return;
 
     firedRef.current = true;
+    confirmedSignupFiredForPageLoad = true;
     fireGoogleAdsConversion(true);
     fireMetaLead(true);
   }, [consent]);
