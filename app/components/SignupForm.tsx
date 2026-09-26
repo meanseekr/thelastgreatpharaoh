@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { trackEvent } from "../lib/analytics";
+import { rememberSignupConversion } from "../lib/signupConversion";
 
 type Status = "idle" | "loading" | "error";
 
@@ -50,7 +51,9 @@ export default function SignupForm({ idPrefix = "join" }: { idPrefix?: string })
         }),
       });
 
-      const data = await res.json().catch(() => ({} as { status?: string; message?: string }));
+      const data = await res
+        .json()
+        .catch(() => ({} as { status?: string; message?: string; conversionId?: string }));
 
       if (!res.ok) {
         setStatus("error");
@@ -58,10 +61,18 @@ export default function SignupForm({ idPrefix = "join" }: { idPrefix?: string })
         return;
       }
 
-      // Kit confirmed the subscription (new or already-on-the-list). Neither
-      // case carries the visitor's email or any other personal data into the
-      // URL — the query string only ever holds the non-identifying result.
+      // Kit accepted the subscription (new or already-on-the-list). With the
+      // form set to auto-confirm in Kit, a new subscriber can enter the
+      // welcome sequence immediately. Neither result carries the visitor's
+      // email or any other personal data into the URL. A new signup receives
+      // a random, non-identifying conversion handoff that cannot be recreated
+      // by directly loading the success-page URL.
       const result = data?.status === "existing" ? "existing" : "new";
+      const conversionId =
+        result === "new" && typeof data?.conversionId === "string"
+          ? data.conversionId
+          : null;
+      if (conversionId) rememberSignupConversion(conversionId);
       trackEvent("email_signup", { source: window.location.pathname, result });
       router.push(`/join/success?status=${result}`);
     } catch {

@@ -1,18 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import SuccessfulSignupTracker from "./SuccessfulSignupTracker";
 
 export const metadata: Metadata = {
-  title: "One More Step | The Last Great Pharaoh",
-  description: "Check your inbox to confirm your subscription to The Last Great Pharaoh reader list.",
+  title: "Welcome | The Last Great Pharaoh",
+  description: "Welcome to The Last Great Pharaoh reader list.",
 };
 
-// `?status=new|existing` is the only thing this URL ever carries — no email
-// address or other personal data is placed in it (see SignupForm.tsx).
+// `?status=new|existing` is the only thing this URL carries — never an email
+// address or other personal data. A random conversion handoff is kept only
+// in the browser's current JavaScript memory (see SignupForm.tsx and
+// app/lib/signupConversion.ts), so direct visits cannot create conversions.
 //
-// This page is reached the instant the signup form is submitted — before
-// Kit's double opt-in confirmation has happened. It must never claim the
-// subscription is complete; that's what /join/confirmed is for, once the
-// reader has actually clicked the link in their confirmation email.
+// With Kit configured for single opt-in, a newly attached subscriber is
+// confirmed immediately and their welcome sequence can begin. `status=new`
+// is also the only case that counts as a new advertising conversion;
+// returning subscribers do not create duplicate Leads.
 export default async function JoinSuccessPage({
   searchParams,
 }: {
@@ -20,23 +23,30 @@ export default async function JoinSuccessPage({
 }) {
   const { status } = await searchParams;
   const alreadySubscribed = status === "existing";
+  const isNewSubscriber = !alreadySubscribed;
 
   return (
     <main className="joinpage">
+      <SuccessfulSignupTracker isNewSubscriber={isNewSubscriber} />
       <div className="joinpage-grain" />
       <div className="joinpage-content">
         <p className="eyebrow">The Last Great Pharaoh</p>
         <h1>
-          One More<br /><em>Step</em>
+          {alreadySubscribed ? (
+            <>You&apos;re Already<br /><em>In the World</em></>
+          ) : (
+            <>You&apos;re In.<br /><em>Welcome to the World</em></>
+          )}
         </h1>
         <p className="deck">
           {alreadySubscribed
-            ? "You're already on the reader list for Osiris Rising. If you previously confirmed your subscription, no further action is needed. If you haven't, check your inbox for the confirmation email."
-            : "We just sent a confirmation email to your inbox. Click the link inside it to join the reader list for Osiris Rising — nothing arrives until you do."}
+            ? "You're already on the reader list for Osiris Rising. No further action is needed."
+            : "You're now on the reader list for Osiris Rising. Your first email introduces the book, its world, and the history behind the story."}
         </p>
         {!alreadySubscribed && (
           <p className="deck">
-            Don&apos;t see it in a minute or two? Check your spam or promotions folder — confirmation emails end up there more often than they should.
+            Osiris Rising opens The Last Great Pharaoh, a historical epic set as the Late Bronze Age
+            world begins to collapse and Egypt fights to survive what follows.
           </p>
         )}
         <Link className="gold-link" href="/">← Back to the world</Link>

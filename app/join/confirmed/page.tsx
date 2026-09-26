@@ -1,21 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import ConfirmedSignupTracker from "./ConfirmedSignupTracker";
 
 export const metadata: Metadata = {
   title: "You're In | The Last Great Pharaoh",
   description: "Your subscription to The Last Great Pharaoh reader list is confirmed.",
 };
 
-// Reached only after a reader clicks the confirmation link in the email Kit
-// sends them — this is the actual end of the double opt-in flow. Kit's
-// "send subscriber data to thank you page" setting is off, so this page
-// never receives (and never reads) an email address or any other personal
-// data in its URL; it's intentionally a plain static page.
+// Kept as a compatibility destination for confirmation links Kit issued
+// before the reader list moved to single opt-in. New signups finish on
+// /join/success and never need this page. It intentionally fires no Lead,
+// so an old subscriber cannot be counted as a new conversion twice.
 export default function JoinConfirmedPage() {
   return (
     <main className="joinpage">
-      <ConfirmedSignupTracker />
       <div className="joinpage-grain" />
       <div className="joinpage-content">
         <p className="eyebrow">The Last Great Pharaoh</p>

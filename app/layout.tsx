@@ -29,7 +29,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             creates the window.gtag / window.fbq stubs — see
             app/components/ConsentManager.tsx) runs before any page-level
             tracker that depends on those globals, such as MetaRouteTracker
-            or app/join/confirmed/ConfirmedSignupTracker.tsx. React fires
+            or app/join/success/SuccessfulSignupTracker.tsx. React fires
             passive effects in tree/document order, so this ordering is
             load-bearing: with ConsentManager after {children}, a page's own
             effect could run first and find window.gtag/window.fbq still
