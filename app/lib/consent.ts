@@ -2,14 +2,11 @@
  * Cookie-consent storage.
  *
  * This is the single source of truth for the visitor's analytics/
- * advertising consent choice, read and written by <ConsentManager>. No
- * analytics or advertising tool reads it yet — GA4, Google Ads conversion
- * tracking, and the Meta Pixel/Conversions API are all a later phase per
- * the TLGP project plan (see the privacy policy's "Cookies, analytics, and
- * advertising" section). Storing the choice now, with analytics and
- * advertising defaulting to off, means those tools can simply check this
- * file when they're installed later instead of every visitor being asked
- * again.
+ * advertising consent choice, read and written by <ConsentManager>. GA4,
+ * Google Ads conversion tracking, and the Meta Pixel all use this record;
+ * analytics and advertising default to off and their scripts do not load
+ * until the corresponding category is granted. The Meta Conversions API
+ * is not installed.
  *
  * The record itself never contains personal data — just three booleans, a
  * timestamp, and a schema version, held in a single first-party cookie.
