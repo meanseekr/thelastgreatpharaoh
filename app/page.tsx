@@ -37,7 +37,7 @@ export default function Home() {
         <section className="join" id="join">
           <p className="section-label">Be first to know</p>
           <h2>Be First to<br /><em>Enter the World</em></h2>
-          <p className="join-copy">Join the reader list for the release of Osiris Rising, early chapters, exclusive artwork, historical notes, and behind-the-scenes updates.</p>
+          <p className="join-copy">Join the reader list and receive the opening excerpt from <em>The Last Great Pharaoh: Osiris Rising</em> immediately by email, followed by occasional updates as the project moves toward publication.</p>
           <SignupForm idPrefix="home" />
         </section>
 
