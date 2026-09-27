@@ -132,7 +132,7 @@ export default function SignupForm({ idPrefix = "join" }: { idPrefix?: string })
         disabled={status === "loading"}
         aria-busy={status === "loading"}
       >
-        {status === "loading" ? "Joining…" : "Enter the World"}
+        {status === "loading" ? "Joining…" : "Get the Opening Excerpt"}
       </button>
 
       <p className="consent">
